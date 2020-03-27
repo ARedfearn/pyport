@@ -7,7 +7,9 @@ def portscan(port):
         s.close()
     except Exception, e:
         if 'Address already in use' in e:
-            print('exception message:', e)
+            print('port', port, 'already in use')
+        else:
+            print('exception message', e)
 
 
 for i in range(8080, 8082):
