@@ -1,4 +1,7 @@
 import socket
+import threading
+from multiprocessing import JoinableQueue
+
 
 def portscan(port):
     try:
@@ -11,6 +14,18 @@ def portscan(port):
         else:
             print('exception message', e)
 
+def threader():
+    while True:
+        worker = q.get()
+        portscan(worker)
+        q.task_done()
 
-for i in range(8080, 8082):
-    portscan(i)
+q = JoinableQueue()
+
+for x in range(30):
+    t = threading.Thread(target=threader)
+    t.daemon = True
+    t.start()
+
+for worker in range(8000, 65535):
+    q.put(worker)
