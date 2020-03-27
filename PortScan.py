@@ -2,6 +2,7 @@ import socket
 import threading
 from multiprocessing import JoinableQueue
 
+lock = threading.Lock()
 
 def portscan(port):
     try:
@@ -10,9 +11,11 @@ def portscan(port):
         s.close()
     except Exception, e:
         if 'Address already in use' in e:
-            print('port', port, 'already in use')
+            with lock:
+                print('port', port, 'already in use')
         else:
-            print('exception message', e)
+            with lock:
+                print('exception message', e)
 
 def threader():
     while True:
